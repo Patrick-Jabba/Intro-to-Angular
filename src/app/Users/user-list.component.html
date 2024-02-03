@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        {{ pageTitle }}
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-2">Filter by</div>
+          <div class="col-md-6">
+            <input type="text" [(ngModel)]="listFilter"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Filter by:</h5>
+        </div>
+        <div class="col-md-6">
+          <button (click)="showNumbers()" class="btn btn-sm btn-primary">
+            {{ isPhoneNumberVisible ? 'Hide' : 'Show '}} Phone number
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table" *ngIf="users.length">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>E-mail</th>
+              <th>Phone</th>
+              <th>Country</th>
+              <th>Cooking Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers">
+              <td>{{ user.fullName }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span *ngIf="isPhoneNumberVisible">
+                  {{ user.phone }}
+                </span>
+              </td>
+                <td>{{ user.country }}</td>
+                <td>
+                  <star
+                    [rating]="user.cookingRating"
+                  ></star>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
