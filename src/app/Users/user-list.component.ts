@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { IUser } from "./User";
+import { UserService } from "./UserService";
 
 @Component({
   selector: 'user-list',
@@ -10,34 +11,12 @@ import { IUser } from "./User";
 export class UserListComponent implements OnInit {
   pageTitle: string = "User List Title - by Patrick";
   filteredUsers: IUser[] = [];
-  users: IUser[] = [
-    {
-      "userId": 1,
-      "fullName": "Patrick Monteiro",
-      "email": "patrick@email.com",
-      "phone": "123123",
-      "country": "Brazil",
-      "cookingRating": 4
-    },
-    {
-      "userId": 2,
-      "fullName": "Mohamad Lawand",
-      "email": "mohamad@email.com",
-      "phone": "111222",
-      "country": "Lebanon",
-      "cookingRating": 1
-    },
-    {
-      "userId": 3,
-      "fullName": "José Avelino",
-      "email": "jose@email.com",
-      "phone": "333111",
-      "country": "Fonte Santa",
-      "cookingRating": 3
-    },
-  ];
+  users: IUser[] = [];
   isPhoneNumberVisible: boolean = true;
   private _listFilter: string = '';
+
+  constructor(private userService: UserService){}
+
 
   get listFilter(): string {
     return this._listFilter;
@@ -56,11 +35,17 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.listFilter = '';
+    this.users = this.userService.getUsers();
+    this.filteredUsers = this.users;
   }
 
   performFiltration(filterBy: string): IUser[]{
     filterBy = filterBy.toLowerCase();
 
     return this.users.filter((user: IUser) => user.fullName.toLocaleLowerCase().includes(filterBy));
+  }
+
+  onStarClicked(message: string): void{
+    this.pageTitle = `User list ${message}`;
   }
 }
