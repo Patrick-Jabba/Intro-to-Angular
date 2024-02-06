@@ -14,6 +14,7 @@ export class UserListComponent implements OnInit {
   users: IUser[] = [];
   isPhoneNumberVisible: boolean = true;
   private _listFilter: string = '';
+  errMessage: string = "";
 
   constructor(private userService: UserService){}
 
@@ -35,8 +36,16 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.listFilter = '';
-    this.users = this.userService.getUsers();
-    this.filteredUsers = this.users;
+    // this.users = this.userService.getUsers();
+    // this.filteredUsers = this.users;
+
+    this.userService.getUsers().subscribe({
+      next: users => {
+        this.users = users;
+        this.filteredUsers = this.users;
+      },
+      error: err => this.errMessage = err
+    })
   }
 
   performFiltration(filterBy: string): IUser[]{

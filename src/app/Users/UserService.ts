@@ -1,34 +1,25 @@
 import { Injectable } from "@angular/core";
 import { IUser } from "./User";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { Observable, catchError, tap, throwError } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService{
-  getUsers(): IUser[]{
-    return [{
-      "userId": 1,
-      "fullName": "Patrick Monteiro",
-      "email": "patrick@email.com",
-      "phone": "123123",
-      "country": "Brazil",
-      "cookingRating": 4
-    },
-    {
-      "userId": 2,
-      "fullName": "Mohamad Lawand",
-      "email": "mohamad@email.com",
-      "phone": "111222",
-      "country": "Lebanon",
-      "cookingRating": 1
-    },
-    {
-      "userId": 3,
-      "fullName": "José Avelino",
-      "email": "jose@email.com",
-      "phone": "333111",
-      "country": "Fonte Santa",
-      "cookingRating": 3
-    }]
+  constructor(private http: HttpClient){}
+
+  private userUrl = "http://localhost:3000/users";
+
+  getUsers(): Observable<IUser[]>{
+    return this.http.get<IUser[]>(this.userUrl).pipe(
+      tap(d => console.log('API response', JSON.stringify(d))),
+      catchError(this.errorHandling)
+    )
+  }
+
+  private errorHandling(errorHandling: HttpErrorResponse) {
+    console.log(errorHandling);
+    return throwError (errorHandling.message);
   };
 }
